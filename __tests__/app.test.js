@@ -3,7 +3,8 @@ const request = require('supertest');
 const db = require('../db/connection');
 const express = require('express');
 const seed = require('../db/seeds/seed');
-const testData = require('../db/data/test-data/index')
+const testData = require('../db/data/test-data/index');
+const res = require('express/lib/response');
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -55,31 +56,82 @@ describe('ERROR GET /api/topicd', () => {
 describe('GET /api/articles/:article_id', () => {
   test('sends GET to ID endpoint -> returns an object', () => {
     return request(app)
-    .get('/api/articles/1')
-    .expect(200)
-    .then((res) => {
-      const output = res.body.rows[0];
-      expect(output).toBeInstanceOf(Object);
-      expect(Object.keys(output).length).toBe(7);
+      .get('/api/articles/1')
+      .expect(200)
+      .then((res) => {
+        const output = res.body.rows[0];
+        expect(output).toBeInstanceOf(Object);
+        expect(Object.keys(output).length).toBe(7);
     });   
   });
 
   test('sends GET to ID endpoint -> checks each object key', () => {
     return request(app)
-    .get('/api/articles/1')
-    .expect(200)
-    .then((res) => {
-      const output = res.body.rows[0];
-      expect(output).toHaveProperty('author');
-      expect(output).toHaveProperty('title');
-      expect(output).toHaveProperty('article_id');
-      expect(output).toHaveProperty('body');
-      expect(output).toHaveProperty('topic');
-      expect(output).toHaveProperty('created_at');
-      expect(output).toHaveProperty('votes');
-    });   
+      .get('/api/articles/1')
+      .expect(200)
+      .then((res) => {
+        const output = res.body.rows[0];
+        expect(output).toHaveProperty('author');
+        expect(output).toHaveProperty('title');
+        expect(output).toHaveProperty('article_id');
+        expect(output).toHaveProperty('body');
+        expect(output).toHaveProperty('topic');
+        expect(output).toHaveProperty('created_at');
+        expect(output).toHaveProperty('votes');
+      });   
   });
 });
 
+describe('PATCH /api/articles/:article_id', () => {
+  test('sends PATCH to ID endpoint -> checks each object key', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes : 1 })
+      .expect(201)
+      .then((res) => {
+        const output = res.body.rows[0];
+        expect(output).toBeInstanceOf(Object);
+        expect(Object.keys(output).length).toBe(7);
+      });
+  });
+  test('sends PATCH to ID endpoint -> checks each object key', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes : 1 })
+      .expect(201)
+      .then((res) => {
+        const output = res.body.rows[0];
+        expect(output).toHaveProperty('author');
+        expect(output).toHaveProperty('title');
+        expect(output).toHaveProperty('article_id');
+        expect(output).toHaveProperty('body');
+        expect(output).toHaveProperty('topic');
+        expect(output).toHaveProperty('created_at');
+        expect(output).toHaveProperty('votes');
+      });
+  });
+  test('sends PATCH to ID endpoint -> tests positive upvote', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes : 1 })
+      .expect(201)
+      .then((res) => {
+        const output = res.body.rows[0].votes;
+        expect(output).toBe(101);
+      });   
+  });
+  test('sends PATCH to ID endpoint -> tests negative downvote', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes : -99 })
+      .expect(201)
+      .then((res) => {
+        const output = res.body.rows[0].votes;
+        expect(output).toBe(1);
+      });   
+  });
+
+
+});
 
 

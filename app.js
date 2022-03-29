@@ -1,5 +1,5 @@
 const express = require('express');
-const { getTopics, getArticleById } = require('./controllers/controllers');
+const { getTopics, getArticleById, patchArticleById } = require('./controllers/controllers');
 
 
 const app = express();
@@ -7,8 +7,12 @@ const app = express();
 // middleware
 app.use(express.json());
 
+//get requests
 app.get('/api/topics', getTopics);
 app.get('/api/articles/:article_id', getArticleById);
+
+// patch requests
+app.patch('/api/articles/:article_id', patchArticleById);
 
 app.use((err, req, res, next) => {
   const badRequestCodes = [];
