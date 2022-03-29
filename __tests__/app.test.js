@@ -44,11 +44,40 @@ describe('GET /api/topics', () => {
       });
   });
 });
-describe('GET /api/topisc', () => {
+describe('ERROR GET /api/topicd', () => {
   test('sends GET to incorrect endpoint -> returns 404', () => {
     return request(app)
       .get('/api/topisc')
       .expect(404)
+  });
+});
+
+describe('GET /api/articles/:article_id', () => {
+  test('sends GET to ID endpoint -> returns an object', () => {
+    return request(app)
+    .get('/api/articles/1')
+    .expect(200)
+    .then((res) => {
+      const output = res.body.rows[0];
+      expect(output).toBeInstanceOf(Object);
+      expect(Object.keys(output).length).toBe(7);
+    });   
+  });
+
+  test('sends GET to ID endpoint -> checks each object key', () => {
+    return request(app)
+    .get('/api/articles/1')
+    .expect(200)
+    .then((res) => {
+      const output = res.body.rows[0];
+      expect(output).toHaveProperty('author');
+      expect(output).toHaveProperty('title');
+      expect(output).toHaveProperty('article_id');
+      expect(output).toHaveProperty('body');
+      expect(output).toHaveProperty('topic');
+      expect(output).toHaveProperty('created_at');
+      expect(output).toHaveProperty('votes');
+    });   
   });
 });
 

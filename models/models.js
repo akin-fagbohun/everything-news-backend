@@ -5,11 +5,7 @@ exports.selectTopics = () => {
     return topics.rows;
   });
 };
-// exports.selectTopics = async (req, res) => {
-//   try {
-//     const results = await db.query('SELECT * FROM topics')
-//     res.send(results.rows)
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+
+exports.selectArticleById = (id) => {
+  return db.query('SELECT * FROM articles WHERE article_id = $1', [id])
+}
