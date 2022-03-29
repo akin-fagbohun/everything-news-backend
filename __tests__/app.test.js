@@ -47,7 +47,7 @@ describe('GET /api/topics', () => {
 describe('ERROR GET /api/topicd', () => {
   test('sends GET to incorrect endpoint -> returns 404', () => {
     return request(app)
-      .get('/api/topisc')
+      .get('/api/topicd')
       .expect(404)
   });
 });

@@ -22,7 +22,6 @@ app.use((err, req, res, next) => {
 
 // handles unexpected errors - check test log for error codes
 app.use((err, req, res, next) => {
-  console.log(err, '<-- error');
   res.status(500).send({ message: 'internal server error.'});
 });
 
