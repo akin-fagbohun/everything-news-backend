@@ -4,7 +4,6 @@ const db = require('../db/connection');
 const express = require('express');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data/index');
-const res = require('express/lib/response');
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -110,6 +109,16 @@ describe('PATCH /api/articles/:article_id', () => {
         expect(output).toHaveProperty('votes');
       });
   });
+  test('sends PATCH to ID endpoint -> tests article_id value on row object', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes : 1 })
+      .expect(201)
+      .then((res) => {
+        const output = res.body.rows[0].article_id;
+        expect(output).toBe(1);
+      });   
+  });
   test('sends PATCH to ID endpoint -> tests positive upvote', () => {
     return request(app)
       .patch('/api/articles/1')
@@ -134,4 +143,43 @@ describe('PATCH /api/articles/:article_id', () => {
 
 });
 
+describe('GET /api/users', () => {
+  test('sends GET to endpoint -> responds with array', () => {
+    return request(app)
+      .get('/api/users')
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toBeInstanceOf(Array);
+      });
+  });
+  test('sends GET to endpoint -> responds with object with two properties', () => {
+    return request(app)
+      .get('/api/users')
+      .expect(200)
+      .then((res) => {
+        const body = res.body;
+        body.forEach(user => {
+          expect(user).toBeInstanceOf(Object);
+          expect(Object.keys(user).length).toBe(3);
+        });
+      });
+  });
+
+  test('sends GET to endpoint -> checks object properties and values', () => {
+    return request(app)
+      .get('/api/users')
+      .expect(200)
+      .then((res) => {
+        const body = res.body;
+        body.forEach(topic => {
+          expect(topic).toHaveProperty('username');
+          expect(topic).toHaveProperty('name');
+          expect(topic).toHaveProperty('avatar_url');
+          expect(typeof Object.values(topic)[0]).toBe('string');
+          expect(typeof Object.values(topic)[1]).toBe('string');
+          expect(typeof Object.values(topic)[2]).toBe('string');
+        });
+      });
+  });
+})
 
