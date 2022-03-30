@@ -11,6 +11,12 @@ exports.selectArticleById = (id) => {
   return db.query('SELECT * FROM articles WHERE article_id = $1', [id])
 }
 
+exports.selectUsers = () => {
+  return db.query('SELECT * FROM users').then((users) => {
+    return users.rows;
+  });
+};
+
 exports.updateArticleById = (id, value) => {
   const query = format('UPDATE %I SET votes =  votes + $2 WHERE article_id = $1 RETURNING *;', 'articles');
   return db.query(query, [id, value]);
