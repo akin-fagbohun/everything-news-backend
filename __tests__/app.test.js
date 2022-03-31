@@ -166,35 +166,18 @@ describe('GET /api/users', () => {
       .get('/api/users')
       .expect(200)
       .then((res) => {
-        expect(res.body).toBeInstanceOf(Array);
-      });
-  });
-  test('sends GET to users endpoint -> responds with object with two properties', () => {
-    return request(app)
-      .get('/api/users')
-      .expect(200)
-      .then((res) => {
-        const body = res.body;
-        body.forEach(user => {
-          expect(user).toBeInstanceOf(Object);
-          expect(Object.keys(user).length).toBe(3);
-        });
-      });
-  });
+        const { body } = res;
 
-  test('sends GET to users endpoint -> checks object properties and values', () => {
-    return request(app)
-      .get('/api/users')
-      .expect(200)
-      .then((res) => {
-        const body = res.body;
-        body.forEach(topic => {
-          expect(topic).toHaveProperty('username');
-          expect(topic).toHaveProperty('name');
-          expect(topic).toHaveProperty('avatar_url');
-          expect(typeof Object.values(topic)[0]).toBe('string');
-          expect(typeof Object.values(topic)[1]).toBe('string');
-          expect(typeof Object.values(topic)[2]).toBe('string');
+        expect(body).toBeInstanceOf(Array);    
+        body.forEach(user => {
+          expect(user).toBeInstanceOf(Object);user
+          expect(Object.keys(user).length).toBe(3);
+          expect(user).toHaveProperty('username');
+          expect(user).toHaveProperty('name');
+          expect(user).toHaveProperty('avatar_url');
+          expect(typeof Object.values(user)[0]).toBe('string');
+          expect(typeof Object.values(user)[1]).toBe('string');
+          expect(typeof Object.values(user)[2]).toBe('string');
         });
       });
   });
