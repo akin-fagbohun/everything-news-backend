@@ -1,5 +1,6 @@
 const db = require('../db/connection');
 const format = require('pg-format');
+const articles = require('../db/data/test-data/articles');
 
 exports.selectTopics = () => {
   return db.query('SELECT * FROM topics').then((topics) => {
@@ -22,6 +23,12 @@ exports.selectUsers = () => {
     return users.rows;
   });
 };
+
+exports.selectArticles = () => {
+  return db.query('SELECT * FROM articles').then((articles) => {
+    return articles.rows;
+  });
+}
 
 exports.updateArticleById = (id, value) => {
   const query = format('UPDATE %I SET votes =  votes + $2 WHERE article_id = $1 RETURNING *;', 'articles');

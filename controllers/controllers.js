@@ -1,6 +1,7 @@
 const { articleData } = require('../db/data/test-data');
+const articles = require('../db/data/test-data/articles');
 const topics = require('../db/data/test-data/topics');
-const { selectTopics, selectArticleById, selectUsers, updateArticleById } = require('../models/models');
+const { selectTopics, selectArticleById, selectUsers, selectArticles, updateArticleById } = require('../models/models');
 
 exports.getTopics = (req, res, next) => {
   selectTopics().then((topics) => {
@@ -16,10 +17,17 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getUsers = (req, res, next) => {
-  selectUsers().then((topics) => {
-    res.status(200).send(topics)
+  selectUsers().then((users) => {
+    res.status(200).send(users)
   });
 };
+
+exports.getArticles = (req, res, next) => {
+  selectArticles().then((articles) => {
+    // console.log(articles.length);
+    res.status(200).send(articles)
+  })
+}
 
 exports.patchArticleById = (req, res, next) => {
   const { inc_votes: votes } = req.body;

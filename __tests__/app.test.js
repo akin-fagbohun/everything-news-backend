@@ -158,12 +158,10 @@ describe('PATCH /api/articles/:article_id', () => {
         expect(output).toBe(1);
       });   
   });
-
-
 });
 
 describe('GET /api/users', () => {
-  test('sends GET to endpoint -> responds with array', () => {
+  test('sends GET to users endpoint -> responds with array', () => {
     return request(app)
       .get('/api/users')
       .expect(200)
@@ -171,7 +169,7 @@ describe('GET /api/users', () => {
         expect(res.body).toBeInstanceOf(Array);
       });
   });
-  test('sends GET to endpoint -> responds with object with two properties', () => {
+  test('sends GET to users endpoint -> responds with object with two properties', () => {
     return request(app)
       .get('/api/users')
       .expect(200)
@@ -184,7 +182,7 @@ describe('GET /api/users', () => {
       });
   });
 
-  test('sends GET to endpoint -> checks object properties and values', () => {
+  test('sends GET to users endpoint -> checks object properties and values', () => {
     return request(app)
       .get('/api/users')
       .expect(200)
@@ -197,6 +195,30 @@ describe('GET /api/users', () => {
           expect(typeof Object.values(topic)[0]).toBe('string');
           expect(typeof Object.values(topic)[1]).toBe('string');
           expect(typeof Object.values(topic)[2]).toBe('string');
+        });
+      });
+  });
+})
+
+describe('GET /api/articles', () => {
+  test('sends GET to articles endpoint -> responds with array', () => {
+    return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toBeInstanceOf(Array);
+      });
+  });
+
+  test('sends GET to users endpoint -> responds with object with two properties', () => {
+    return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then((res) => {
+        const body = res.body;
+        body.forEach(article => {
+          expect(article).toBeInstanceOf(Object);
+          expect(Object.keys(article).length).toBe(7);
         });
       });
   });
