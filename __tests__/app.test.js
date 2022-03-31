@@ -152,8 +152,7 @@ describe('GET /api/articles', () => {
       .get('/api/articles')
       .expect(200)
       .then((res) => {
-        const body = res.body;
-
+        const { body } = res;
         expect(body).toBeInstanceOf(Array);
         body.forEach(article => {
           expect(article).toBeInstanceOf(Object);
@@ -169,4 +168,24 @@ describe('GET /api/articles', () => {
       });
   });
 })
+
+describe('GET /api/articles/:article_id/comments', () => {
+  test('sends GET to articleID/comments endpoint -> checks response', () => {
+    return request(app)
+    .get('/api/articles/1/comments')
+    .expect(200)
+    .then((res) => {
+      const output = res.body;
+      expect(output).toBeInstanceOf(Array);
+      expect(Object.keys(output).length).toBe(11);
+      output.forEach(comment => {
+        expect(comment).toHaveProperty('comment_id');
+        expect(comment).toHaveProperty('votes');
+        expect(comment).toHaveProperty('created_at');
+        expect(comment).toHaveProperty('body');
+        expect(comment).toHaveProperty('author');
+      });
+    });  
+  });   
+});
 

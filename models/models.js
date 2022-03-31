@@ -18,6 +18,13 @@ exports.selectArticleById = (id) => {
     GROUP BY articles.article_id;`, [id])
 }
 
+exports.selectArticleCommentsById = (id) => {
+  return db.query(`
+    SELECT comment_id, author, body, created_at, votes
+    FROM comments
+    WHERE article_id = $1;`, [id])
+}
+
 exports.selectUsers = () => {
   return db.query('SELECT * FROM users').then((users) => {
     return users.rows;
