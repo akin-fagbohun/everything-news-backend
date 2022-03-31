@@ -24,7 +24,6 @@ exports.getUsers = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   selectArticles().then((articles) => {
-    // console.log(articles.length);
     res.status(200).send(articles)
   })
 }

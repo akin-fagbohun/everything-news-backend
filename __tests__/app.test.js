@@ -9,33 +9,19 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe('GET /api/topics', () => {
-  test('sends GET to topics endpoint -> responds with array', () => {
+  test('sends GET to topics endpoint -> checks for Array and elements', () => {
     return request(app)
       .get('/api/topics')
       .expect(200)
       .then((res) => {
-        expect(res.body).toBeInstanceOf(Array);
-      });
-  });
-  test('sends GET to topics endpoint -> responds with object with two properties', () => {
-    return request(app)
-      .get('/api/topics')
-      .expect(200)
-      .then((res) => {
-        const body = res.body;
+        const { body } = res;
+        // checks object type
+        expect(body).toBeInstanceOf(Array);
+        // checks each element on array 
         body.forEach(topic => {
+          // checks element type and confirms keys and value types
           expect(topic).toBeInstanceOf(Object);
           expect(Object.keys(topic).length).toBe(2);
-        });
-      });
-  });
-  test('sends GET to topics endpoint -> checks object properties and values', () => {
-    return request(app)
-      .get('/api/topics')
-      .expect(200)
-      .then((res) => {
-        const body = res.body;
-        body.forEach(topic => {
           expect(topic).toHaveProperty('description');
           expect(topic).toHaveProperty('slug');
           expect(typeof Object.values(topic)[0]).toBe('string');
@@ -44,6 +30,7 @@ describe('GET /api/topics', () => {
       });
   });
 });
+
 describe('ERROR GET /api/topicd', () => {
   test('sends GET to incorrect endpoint -> returns 404', () => {
     return request(app)
@@ -53,31 +40,24 @@ describe('ERROR GET /api/topicd', () => {
 });
 
 describe('GET /api/articles/:article_id', () => {
-  test('sends GET to ID endpoint -> returns an object', () => {
+  test('sends GET to article ID endpoint -> checks for object and keys', () => {
     return request(app)
       .get('/api/articles/1')
       .expect(200)
       .then((res) => {
-        const output = res.body;
-        expect(output).toBeInstanceOf(Object);
-        expect(Object.keys(output).length).toBe(8);
-    });   
-  });
-
-  test('sends GET to article ID endpoint -> checks each object key', () => {
-    return request(app)
-      .get('/api/articles/1')
-      .expect(200)
-      .then((res) => {
-        const output = res.body;
-        expect(output).toHaveProperty('author');
-        expect(output).toHaveProperty('title');
-        expect(output).toHaveProperty('article_id');
-        expect(output).toHaveProperty('body');
-        expect(output).toHaveProperty('topic');
-        expect(output).toHaveProperty('created_at');
-        expect(output).toHaveProperty('votes');
-        expect(output).toHaveProperty('comment_count');
+        const { body } = res;
+        // checks object type and number of keys
+        expect(body).toBeInstanceOf(Object);
+        expect(Object.keys(body).length).toBe(8);
+        // checks object for object keys
+        expect(body).toHaveProperty('author');
+        expect(body).toHaveProperty('title');
+        expect(body).toHaveProperty('article_id');
+        expect(body).toHaveProperty('body');
+        expect(body).toHaveProperty('topic');
+        expect(body).toHaveProperty('created_at');
+        expect(body).toHaveProperty('votes');
+        expect(body).toHaveProperty('comment_count');
       });   
   });
 
@@ -86,6 +66,8 @@ describe('GET /api/articles/:article_id', () => {
       .get('/api/articles/1')
       .expect(200)
       .then((res) => {
+        // checks article ID object. 
+          // Note .toMatchObject allows for omission of 'created_at' key
         const output = {
           comment_count: '11',
           article_id: 1,
@@ -107,55 +89,34 @@ describe('PATCH /api/articles/:article_id', () => {
       .send({ inc_votes : 1 })
       .expect(201)
       .then((res) => {
-        const output = res.body;
-        expect(output).toBeInstanceOf(Object);
-        expect(Object.keys(output).length).toBe(7);
+        const { body } = res;
+        // checks response type and number of keys on object
+        expect(body).toBeInstanceOf(Object);
+        expect(Object.keys(body).length).toBe(7);
+        // checks object contains required keys
+        expect(body).toHaveProperty('author');
+        expect(body).toHaveProperty('title');
+        expect(body).toHaveProperty('article_id');
+        expect(body).toHaveProperty('body');
+        expect(body).toHaveProperty('topic');
+        expect(body).toHaveProperty('created_at');
+        expect(body).toHaveProperty('votes');
+        // checks article ID is correct
+        expect(body.article_id).toBe(1);
+        // checks upvote by +1 applies
+        expect(body.votes).toBe(101);
       });
   });
-  test('sends PATCH to ID endpoint -> checks each object key', () => {
-    return request(app)
-      .patch('/api/articles/1')
-      .send({ inc_votes : 1 })
-      .expect(201)
-      .then((res) => {
-        const output = res.body;
-        expect(output).toHaveProperty('author');
-        expect(output).toHaveProperty('title');
-        expect(output).toHaveProperty('article_id');
-        expect(output).toHaveProperty('body');
-        expect(output).toHaveProperty('topic');
-        expect(output).toHaveProperty('created_at');
-        expect(output).toHaveProperty('votes');
-      });
-  });
-  test('sends PATCH to ID endpoint -> tests article_id value on row object', () => {
-    return request(app)
-      .patch('/api/articles/1')
-      .send({ inc_votes : 1 })
-      .expect(201)
-      .then((res) => {
-        const output = res.body.article_id;
-        expect(output).toBe(1);
-      });   
-  });
-  test('sends PATCH to ID endpoint -> tests positive upvote', () => {
-    return request(app)
-      .patch('/api/articles/1')
-      .send({ inc_votes : 1 })
-      .expect(201)
-      .then((res) => {
-        const output = res.body.votes;
-        expect(output).toBe(101);
-      });   
-  });
+
   test('sends PATCH to ID endpoint -> tests negative downvote', () => {
     return request(app)
       .patch('/api/articles/1')
       .send({ inc_votes : -99 })
       .expect(201)
       .then((res) => {
-        const output = res.body.votes;
-        expect(output).toBe(1);
+        const { body } = res;
+        // checks downvote by -99 applies
+        expect(body.votes).toBe(1);
       });   
   });
 });
@@ -167,9 +128,11 @@ describe('GET /api/users', () => {
       .expect(200)
       .then((res) => {
         const { body } = res;
-
-        expect(body).toBeInstanceOf(Array);    
+        // checks response value type
+        expect(body).toBeInstanceOf(Array);
+        // checks each element of array response    
         body.forEach(user => {
+          // checks each element's objects and keys
           expect(user).toBeInstanceOf(Object);user
           expect(Object.keys(user).length).toBe(3);
           expect(user).toHaveProperty('username');
@@ -184,24 +147,24 @@ describe('GET /api/users', () => {
 })
 
 describe('GET /api/articles', () => {
-  test('sends GET to articles endpoint -> responds with array', () => {
-    return request(app)
-      .get('/api/articles')
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toBeInstanceOf(Array);
-      });
-  });
-
-  test('sends GET to users endpoint -> responds with object with two properties', () => {
+  test('sends GET to users endpoint -> responds with array -> checks elements', () => {
     return request(app)
       .get('/api/articles')
       .expect(200)
       .then((res) => {
         const body = res.body;
+
+        expect(body).toBeInstanceOf(Array);
         body.forEach(article => {
           expect(article).toBeInstanceOf(Object);
           expect(Object.keys(article).length).toBe(7);
+          expect(article).toHaveProperty('article_id');
+          expect(article).toHaveProperty('author');
+          expect(article).toHaveProperty('body');
+          expect(article).toHaveProperty('created_at');
+          expect(article).toHaveProperty('title');
+          expect(article).toHaveProperty('topic');
+          expect(article).toHaveProperty('votes');
         });
       });
   });
