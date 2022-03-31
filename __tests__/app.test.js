@@ -9,7 +9,7 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe('GET /api/topics', () => {
-  test('sends GET to endpoint -> responds with array', () => {
+  test('sends GET to topics endpoint -> responds with array', () => {
     return request(app)
       .get('/api/topics')
       .expect(200)
@@ -17,7 +17,7 @@ describe('GET /api/topics', () => {
         expect(res.body).toBeInstanceOf(Array);
       });
   });
-  test('sends GET to endpoint -> responds with object with two properties', () => {
+  test('sends GET to topics endpoint -> responds with object with two properties', () => {
     return request(app)
       .get('/api/topics')
       .expect(200)
@@ -29,7 +29,7 @@ describe('GET /api/topics', () => {
         });
       });
   });
-  test('sends GET to endpoint -> checks object properties and values', () => {
+  test('sends GET to topics endpoint -> checks object properties and values', () => {
     return request(app)
       .get('/api/topics')
       .expect(200)
@@ -60,11 +60,11 @@ describe('GET /api/articles/:article_id', () => {
       .then((res) => {
         const output = res.body;
         expect(output).toBeInstanceOf(Object);
-        expect(Object.keys(output).length).toBe(7);
+        expect(Object.keys(output).length).toBe(8);
     });   
   });
 
-  test('sends GET to ID endpoint -> checks each object key', () => {
+  test('sends GET to article ID endpoint -> checks each object key', () => {
     return request(app)
       .get('/api/articles/1')
       .expect(200)
@@ -77,6 +77,25 @@ describe('GET /api/articles/:article_id', () => {
         expect(output).toHaveProperty('topic');
         expect(output).toHaveProperty('created_at');
         expect(output).toHaveProperty('votes');
+        expect(output).toHaveProperty('comment_count');
+      });   
+  });
+
+  test('sends GET to article ID endpoint -> checks object response at ID', () => {
+    return request(app)
+      .get('/api/articles/1')
+      .expect(200)
+      .then((res) => {
+        const output = {
+          comment_count: '11',
+          article_id: 1,
+          title: 'Living in the shadow of a great man',
+          topic: 'mitch',
+          author: 'butter_bridge',
+          body: 'I find this existence challenging',
+          votes: 100
+        };
+        expect(res.body).toMatchObject(output);
       });   
   });
 });
