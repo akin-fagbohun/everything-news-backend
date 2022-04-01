@@ -7,7 +7,7 @@ const { selectArticles, selectArticleById, selectArticleCommentsById, updateArti
 // GET request controllers
 
 exports.getArticles = (req, res, next) => {
-  selectArticles()
+  selectArticles(req)
   .then((articles) => {
     res.status(200).send(articles)
   })

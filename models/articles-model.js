@@ -4,8 +4,36 @@ const articles = require('../db/data/test-data/articles');
 
 // GET request models
 
-exports.selectArticles = () => {
-  return db.query('SELECT * FROM articles')
+// exports.selectArticles = () => {
+//   return db.query('SELECT * FROM articles')
+//   .then((articles) => {
+//     return articles.rows;
+//   });
+// };
+
+exports.selectArticles = (req) => {
+  const sortableColumns = ['author', 'created_at', 'title', 'topic', 'votes']
+  const { query: urlQuery } = req;
+  let sqlQuery = `SELECT * FROM articles`
+
+  if (Object.keys(urlQuery).length !== 0) {
+    // rejects invalid sort queries
+    if (!sortableColumns.includes(urlQuery.sort_by)) {
+      return Promise.reject({ status: 400, msg: 'Invalid sort query' });
+    };
+    // rejects invalid order queries
+    if (!['asc', 'desc'].includes(urlQuery.order)) {
+      return Promise.reject({ status: 400, msg: 'Invalid order query' });
+    };
+    // allows sorting by topic
+    if (urlQuery.hasOwnProperty('topic')) {
+      sqlQuery = `SELECT * FROM articles WHERE topic LIKE '${urlQuery.topic}'`
+    }
+    // adds SQL sorting parameters
+    sqlQuery += ` ORDER BY ${urlQuery.sort_by} ${urlQuery.order};`;
+  }
+  
+  return db.query(sqlQuery)
   .then((articles) => {
     return articles.rows;
   });
@@ -45,7 +73,7 @@ exports.selectArticleCommentsById = (id) => {
 exports.updateArticleById = (id, value) => {
   if (!value || typeof value !== 'number') {
     return Promise.reject({ status: 400, msg: 'Bad Request'})
-  }
+  };
   const query = format('UPDATE %I SET votes = votes + $2 WHERE article_id = $1 RETURNING *;', 'articles');
   return db.query(query, [id, value]);
 }
