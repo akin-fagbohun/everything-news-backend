@@ -48,16 +48,17 @@ describe('GET /api/articles/:article_id', () => {
         const { body } = res;
         // checks object type and number of keys
         expect(body).toBeInstanceOf(Object);
-        expect(Object.keys(body).length).toBe(8);
+        expect(Object.keys(body).length).toBe(1);
+        expect(Object.keys(body.article).length).toBe(8);
         // checks object for object keys
-        expect(body).toHaveProperty('author');
-        expect(body).toHaveProperty('title');
-        expect(body).toHaveProperty('article_id');
-        expect(body).toHaveProperty('body');
-        expect(body).toHaveProperty('topic');
-        expect(body).toHaveProperty('created_at');
-        expect(body).toHaveProperty('votes');
-        expect(body).toHaveProperty('comment_count');
+        expect(body.article).toHaveProperty('author');
+        expect(body.article).toHaveProperty('title');
+        expect(body.article).toHaveProperty('article_id');
+        expect(body.article).toHaveProperty('body');
+        expect(body.article).toHaveProperty('topic');
+        expect(body.article).toHaveProperty('created_at');
+        expect(body.article).toHaveProperty('votes');
+        expect(body.article).toHaveProperty('comment_count');
       });   
   });
 
@@ -77,7 +78,25 @@ describe('GET /api/articles/:article_id', () => {
           body: 'I find this existence challenging',
           votes: 100
         };
-        expect(res.body).toMatchObject(output);
+        expect(res.body.article).toMatchObject(output);
+      });   
+  });
+
+  test('GET ERR -> sends request to non-existent article ID', () => {
+    return request(app)
+      .get('/api/articles/997')
+      .expect(404)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'Not Found' });
+      });   
+  });
+
+  test('GET ERR -> sends request with invalid article ID', () => {
+    return request(app)
+      .get('/api/articles/notValidID')
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'Bad request.' });
       });   
   });
 });
@@ -119,6 +138,28 @@ describe('PATCH /api/articles/:article_id', () => {
         expect(body.votes).toBe(1);
       });   
   });
+
+  test('GET ERR -> sends PATCH to ID endpoint -> tests missing body', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({})
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'Bad Request' });
+      });   
+  });
+
+  test('GET ERR -> sends PATCH to ID endpoint -> tests incorrect value type.', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes : '-99' })
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'Bad Request' });
+      });   
+  });
+
+
 });
 
 describe('GET /api/users', () => {
@@ -147,7 +188,7 @@ describe('GET /api/users', () => {
 })
 
 describe('GET /api/articles', () => {
-  test('sends GET to users endpoint -> responds with array -> checks elements', () => {
+  test('sends GET to articles endpoint -> responds with array -> checks elements', () => {
     return request(app)
       .get('/api/articles')
       .expect(200)
@@ -167,7 +208,7 @@ describe('GET /api/articles', () => {
         });
       });
   });
-})
+});
 
 describe('GET /api/articles/:article_id/comments', () => {
   test('sends GET to articleID/comments endpoint -> checks response', () => {
@@ -175,10 +216,11 @@ describe('GET /api/articles/:article_id/comments', () => {
     .get('/api/articles/1/comments')
     .expect(200)
     .then((res) => {
-      const output = res.body;
-      expect(output).toBeInstanceOf(Array);
-      expect(Object.keys(output).length).toBe(11);
-      output.forEach(comment => {
+      const { body } = res;
+      expect(body).toBeInstanceOf(Object);
+      expect(body.comments).toBeInstanceOf(Array);
+      expect(Object.keys(body.comments).length).toBe(11);
+      body.comments.forEach(comment => {
         expect(comment).toHaveProperty('comment_id');
         expect(comment).toHaveProperty('votes');
         expect(comment).toHaveProperty('created_at');
@@ -187,5 +229,15 @@ describe('GET /api/articles/:article_id/comments', () => {
       });
     });  
   });   
+  
+  test('GET ERR -> sends request to non-existent articleID/comments endpoint -> checks response', () => {
+    return request(app)
+      .get('/api/articles/997/comments')
+      .expect(404)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'Not Found' });
+      });   
+  });
+
 });
 
