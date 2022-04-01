@@ -158,8 +158,6 @@ describe('PATCH /api/articles/:article_id', () => {
         expect(res.body).toEqual({ msg: 'Bad Request' });
       });   
   });
-
-
 });
 
 describe('GET /api/users', () => {
@@ -208,6 +206,32 @@ describe('GET /api/articles', () => {
         });
       });
   });
+  test('sends GET to articles endpoint -> responds with array -> checks sort_by "age" ASC', () => {
+    return request(app)
+      .get('/api/articles?sort_by=age')
+      .expect(200)
+      .then((res) => {
+        const { body } = res;
+        expect(body).toBeInstanceOf(Array);
+        body.forEach(article => {
+          expect(article).toBeInstanceOf(Object);
+          expect(Object.keys(article).length).toBe(7);
+          expect(article).toHaveProperty('article_id');
+          expect(article).toHaveProperty('author');
+          expect(article).toHaveProperty('body');
+          expect(article).toHaveProperty('created_at');
+          expect(article).toHaveProperty('title');
+          expect(article).toHaveProperty('topic');
+          expect(article).toHaveProperty('votes');
+        });
+      // checks sorting by article age (article_id)
+      const top = body[0];
+      const bot = body[body.length-1]
+        if (body.length > 1) {
+          expect(top.article_id).toBeLessThan(bot.article_id);
+        }
+      });
+  });
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
@@ -238,6 +262,5 @@ describe('GET /api/articles/:article_id/comments', () => {
         expect(res.body).toEqual({ msg: 'Not Found' });
       });   
   });
-
 });
 

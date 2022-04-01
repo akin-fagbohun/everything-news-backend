@@ -10,6 +10,12 @@ exports.selectArticles = () => {
     return articles.rows;
   });
 };
+exports.selectArticles = () => {
+  return db.query('SELECT * FROM articles')
+  .then((articles) => {
+    return articles.rows;
+  });
+};
 
 exports.selectArticleById = (id) => {
   return db.query(`
@@ -45,7 +51,7 @@ exports.selectArticleCommentsById = (id) => {
 exports.updateArticleById = (id, value) => {
   if (!value || typeof value !== 'number') {
     return Promise.reject({ status: 400, msg: 'Bad Request'})
-  }
+  };
   const query = format('UPDATE %I SET votes = votes + $2 WHERE article_id = $1 RETURNING *;', 'articles');
   return db.query(query, [id, value]);
 }
