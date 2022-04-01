@@ -25,9 +25,9 @@ exports.selectArticles = (req) => {
     if (!['asc', 'desc'].includes(urlQuery.order)) {
       return Promise.reject({ status: 400, msg: 'Invalid order query' });
     };
-   
+    // allows sorting by topic
     if (urlQuery.hasOwnProperty('topic')) {
-      sqlQuery = `SELECT * FROM articles WHERE topic = ${urlQuery.topic}`
+      sqlQuery = `SELECT * FROM articles WHERE topic LIKE '${urlQuery.topic}'`
     }
     // adds SQL sorting parameters
     sqlQuery += ` ORDER BY ${urlQuery.sort_by} ${urlQuery.order};`;

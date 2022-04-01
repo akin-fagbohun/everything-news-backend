@@ -252,29 +252,49 @@ describe('GET /api/articles', () => {
       });
   });
 
-  // test('sends GET to articles endpoint -> responds with array -> checks filter by topic', () => {
-  //   return request(app)
-  //     .get('/api/articles?sort_by=created_at&order=desc&topic=mitch')
-  //     .expect(200)
-  //     .then((res) => {
-  //       const { body } = res;
-  //       console.log(body);
-  //       expect(body).toBeInstanceOf(Array);
-  //       body.forEach(article => {
-  //         expect(article).toBeInstanceOf(Object);
-  //         expect(Object.keys(article).length).toBe(7);
-  //         expect(article).toHaveProperty('article_id');
-  //         expect(article).toHaveProperty('author');
-  //         expect(article).toHaveProperty('body');
-  //         expect(article).toHaveProperty('created_at');
-  //         expect(article).toHaveProperty('title');
-  //         expect(article).toHaveProperty('topic');
-  //         expect(article).toHaveProperty('votes');
-  //       });
-  //     // checks sorting by article age (article_id)
-  //     expect(body).toBeSortedBy('created_at', { descending: true });
-  //     });
-  // });
+  test('sends GET to articles endpoint -> responds with array -> checks filter by topic', () => {
+    return request(app)
+      .get('/api/articles?sort_by=created_at&order=desc&topic=mitch')
+      .expect(200)
+      .then((res) => {
+        const { body } = res;
+        console.log(body);
+        expect(body).toBeInstanceOf(Array);
+        body.forEach(article => {
+          expect(article).toBeInstanceOf(Object);
+          expect(Object.keys(article).length).toBe(7);
+          expect(article).toHaveProperty('article_id');
+          expect(article).toHaveProperty('author');
+          expect(article).toHaveProperty('body');
+          expect(article).toHaveProperty('created_at');
+          expect(article).toHaveProperty('title');
+          expect(article).toHaveProperty('topic');
+          expect(article).toHaveProperty('votes');
+        });
+      // checks sorting by article age (article_id)
+      expect(body).toBeSortedBy('created_at', { descending: true });
+      });
+  });
+
+  test('ERR sends GET to articles endpoint using bad query', () => {
+    return request(app)
+      .get('/api/articles?sort_by=naughty&order=desc&topic=mitch')
+      .expect(400)
+      .then((res) => {
+        const { body } = res;
+        expect(body).toEqual({ msg: 'Invalid sort query' });
+      });
+  });
+
+  test('ERR sends GET to articles endpoint using bad order query', () => {
+    return request(app)
+      .get('/api/articles?sort_by=created_at&order=SELECT&topic=mitch')
+      .expect(400)
+      .then((res) => {
+        const { body } = res;
+        expect(body).toEqual({ msg: 'Invalid order query' });
+      });
+  });
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
