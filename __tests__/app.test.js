@@ -208,7 +208,7 @@ describe('GET /api/articles', () => {
   });
   test('sends GET to articles endpoint -> responds with array -> checks sort_by "age" ASC', () => {
     return request(app)
-      .get('/api/articles?sort_by=age')
+      .get('/api/articles?sort_by=created_at&order=asc')
       .expect(200)
       .then((res) => {
         const { body } = res;
@@ -225,13 +225,56 @@ describe('GET /api/articles', () => {
           expect(article).toHaveProperty('votes');
         });
       // checks sorting by article age (article_id)
-      const top = body[0];
-      const bot = body[body.length-1]
-        if (body.length > 1) {
-          expect(top.article_id).toBeLessThan(bot.article_id);
-        }
+      expect(body).toBeSortedBy('created_at', { ascending: true });
       });
   });
+
+  test('sends GET to articles endpoint -> responds with array -> checks sort_by DESC', () => {
+    return request(app)
+      .get('/api/articles?sort_by=created_at&order=desc')
+      .expect(200)
+      .then((res) => {
+        const { body } = res;
+        expect(body).toBeInstanceOf(Array);
+        body.forEach(article => {
+          expect(article).toBeInstanceOf(Object);
+          expect(Object.keys(article).length).toBe(7);
+          expect(article).toHaveProperty('article_id');
+          expect(article).toHaveProperty('author');
+          expect(article).toHaveProperty('body');
+          expect(article).toHaveProperty('created_at');
+          expect(article).toHaveProperty('title');
+          expect(article).toHaveProperty('topic');
+          expect(article).toHaveProperty('votes');
+        });
+      // checks sorting by article age (article_id)
+      expect(body).toBeSortedBy('created_at', { descending: true });
+      });
+  });
+
+  // test('sends GET to articles endpoint -> responds with array -> checks filter by topic', () => {
+  //   return request(app)
+  //     .get('/api/articles?sort_by=created_at&order=desc&topic=mitch')
+  //     .expect(200)
+  //     .then((res) => {
+  //       const { body } = res;
+  //       console.log(body);
+  //       expect(body).toBeInstanceOf(Array);
+  //       body.forEach(article => {
+  //         expect(article).toBeInstanceOf(Object);
+  //         expect(Object.keys(article).length).toBe(7);
+  //         expect(article).toHaveProperty('article_id');
+  //         expect(article).toHaveProperty('author');
+  //         expect(article).toHaveProperty('body');
+  //         expect(article).toHaveProperty('created_at');
+  //         expect(article).toHaveProperty('title');
+  //         expect(article).toHaveProperty('topic');
+  //         expect(article).toHaveProperty('votes');
+  //       });
+  //     // checks sorting by article age (article_id)
+  //     expect(body).toBeSortedBy('created_at', { descending: true });
+  //     });
+  // });
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
