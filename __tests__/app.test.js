@@ -48,16 +48,17 @@ describe('GET /api/articles/:article_id', () => {
         const { body } = res;
         // checks object type and number of keys
         expect(body).toBeInstanceOf(Object);
-        expect(Object.keys(body).length).toBe(8);
+        expect(Object.keys(body).length).toBe(1);
+        expect(Object.keys(body.article).length).toBe(8);
         // checks object for object keys
-        expect(body).toHaveProperty('author');
-        expect(body).toHaveProperty('title');
-        expect(body).toHaveProperty('article_id');
-        expect(body).toHaveProperty('body');
-        expect(body).toHaveProperty('topic');
-        expect(body).toHaveProperty('created_at');
-        expect(body).toHaveProperty('votes');
-        expect(body).toHaveProperty('comment_count');
+        expect(body.article).toHaveProperty('author');
+        expect(body.article).toHaveProperty('title');
+        expect(body.article).toHaveProperty('article_id');
+        expect(body.article).toHaveProperty('body');
+        expect(body.article).toHaveProperty('topic');
+        expect(body.article).toHaveProperty('created_at');
+        expect(body.article).toHaveProperty('votes');
+        expect(body.article).toHaveProperty('comment_count');
       });   
   });
 
@@ -77,7 +78,7 @@ describe('GET /api/articles/:article_id', () => {
           body: 'I find this existence challenging',
           votes: 100
         };
-        expect(res.body).toMatchObject(output);
+        expect(res.body.article).toMatchObject(output);
       });   
   });
 
@@ -215,10 +216,11 @@ describe('GET /api/articles/:article_id/comments', () => {
     .get('/api/articles/1/comments')
     .expect(200)
     .then((res) => {
-      const output = res.body;
-      expect(output).toBeInstanceOf(Array);
-      expect(Object.keys(output).length).toBe(11);
-      output.forEach(comment => {
+      const { body } = res;
+      expect(body).toBeInstanceOf(Object);
+      expect(body.comments).toBeInstanceOf(Array);
+      expect(Object.keys(body.comments).length).toBe(11);
+      body.comments.forEach(comment => {
         expect(comment).toHaveProperty('comment_id');
         expect(comment).toHaveProperty('votes');
         expect(comment).toHaveProperty('created_at');
