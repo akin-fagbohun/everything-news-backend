@@ -14,17 +14,21 @@ exports.getArticles = (req, res, next) => {
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
-  selectArticleById(article_id).then((article) => {
-      res.status(200).send(article.rows[0]);
-  });
+  selectArticleById(article_id)
+    .then((article) => {
+      res.status(200).send(article[0])
+    })
+    .catch(next);
 };
 
 exports.getArticleCommentsById = (req, res, next) => {
   const { article_id } = req.params;
-  selectArticleCommentsById(article_id).then((article) => {
-    console.log(article.rows);
-      res.status(200).send(article.rows);
-  });
+  selectArticleCommentsById(article_id)
+    .then((comments) => {
+      console.log(comments);
+      res.status(200).send(comments);
+    })
+    .catch(next);
 };
 
 // PATCH request controllers 

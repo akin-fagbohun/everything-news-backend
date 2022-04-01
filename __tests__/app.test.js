@@ -80,6 +80,24 @@ describe('GET /api/articles/:article_id', () => {
         expect(res.body).toMatchObject(output);
       });   
   });
+
+  test('GET ERR -> sends request to non-existent article ID', () => {
+    return request(app)
+      .get('/api/articles/997')
+      .expect(404)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'article not found.' });
+      });   
+  });
+
+  test('GET ERR -> sends request with invalid article ID', () => {
+    return request(app)
+      .get('/api/articles/notValidID')
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'Bad request.' });
+      });   
+  });
 });
 
 describe('PATCH /api/articles/:article_id', () => {
@@ -119,6 +137,8 @@ describe('PATCH /api/articles/:article_id', () => {
         expect(body.votes).toBe(1);
       });   
   });
+
+
 });
 
 describe('GET /api/users', () => {
@@ -187,5 +207,15 @@ describe('GET /api/articles/:article_id/comments', () => {
       });
     });  
   });   
+  // err
+  test('GET ERR -> sends request to non-existent articleID/comments endpoint -> checks response', () => {
+    return request(app)
+      .get('/api/articles/997/comments')
+      .expect(404)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'article not found.' });
+      });   
+  });
+
 });
 

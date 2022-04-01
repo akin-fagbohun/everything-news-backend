@@ -18,6 +18,12 @@ exports.selectArticleById = (id) => {
     ON comments.article_id = articles.article_id
     WHERE articles.article_id = $1
     GROUP BY articles.article_id;`, [id])
+    .then((article) => {
+      if (article.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: 'article not found.' })
+      }
+      return article.rows;
+    });
 };
 
 exports.selectArticleCommentsById = (id) => {
@@ -25,6 +31,12 @@ exports.selectArticleCommentsById = (id) => {
     SELECT comment_id, author, body, created_at, votes
     FROM comments
     WHERE article_id = $1;`, [id])
+    .then((comment) => {
+      if (comment.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: 'article not found.' })
+      }
+      return comment.rows;
+    })
 };
 
 // PATCH request models
