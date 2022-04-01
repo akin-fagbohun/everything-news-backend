@@ -7,10 +7,12 @@ const { selectArticles, selectArticleById, selectArticleCommentsById, updateArti
 // GET request controllers
 
 exports.getArticles = (req, res, next) => {
-  selectArticles().then((articles) => {
+  selectArticles()
+  .then((articles) => {
     res.status(200).send(articles)
   })
-}
+  .catch(next);
+};
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
@@ -25,7 +27,6 @@ exports.getArticleCommentsById = (req, res, next) => {
   const { article_id } = req.params;
   selectArticleCommentsById(article_id)
     .then((comments) => {
-      console.log(comments);
       res.status(200).send(comments);
     })
     .catch(next);
@@ -38,5 +39,6 @@ exports.patchArticleById = (req, res, next) => {
   const { article_id } = req.params;
   updateArticleById(article_id, votes).then((article) => {
     res.status(201).send(article.rows[0])
-  });
+  })
+  .catch(next);
 }

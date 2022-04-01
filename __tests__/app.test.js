@@ -86,7 +86,7 @@ describe('GET /api/articles/:article_id', () => {
       .get('/api/articles/997')
       .expect(404)
       .then((res) => {
-        expect(res.body).toEqual({ msg: 'article not found.' });
+        expect(res.body).toEqual({ msg: 'Not Found' });
       });   
   });
 
@@ -138,6 +138,26 @@ describe('PATCH /api/articles/:article_id', () => {
       });   
   });
 
+  test('GET ERR -> sends PATCH to ID endpoint -> tests missing body', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({})
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'Bad Request' });
+      });   
+  });
+
+  test('GET ERR -> sends PATCH to ID endpoint -> tests incorrect value type.', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes : '-99' })
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'Bad Request' });
+      });   
+  });
+
 
 });
 
@@ -167,7 +187,7 @@ describe('GET /api/users', () => {
 })
 
 describe('GET /api/articles', () => {
-  test('sends GET to users endpoint -> responds with array -> checks elements', () => {
+  test('sends GET to articles endpoint -> responds with array -> checks elements', () => {
     return request(app)
       .get('/api/articles')
       .expect(200)
@@ -187,7 +207,7 @@ describe('GET /api/articles', () => {
         });
       });
   });
-})
+});
 
 describe('GET /api/articles/:article_id/comments', () => {
   test('sends GET to articleID/comments endpoint -> checks response', () => {
@@ -207,13 +227,13 @@ describe('GET /api/articles/:article_id/comments', () => {
       });
     });  
   });   
-  // err
+  
   test('GET ERR -> sends request to non-existent articleID/comments endpoint -> checks response', () => {
     return request(app)
       .get('/api/articles/997/comments')
       .expect(404)
       .then((res) => {
-        expect(res.body).toEqual({ msg: 'article not found.' });
+        expect(res.body).toEqual({ msg: 'Not Found' });
       });   
   });
 
