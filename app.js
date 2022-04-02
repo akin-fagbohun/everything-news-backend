@@ -1,5 +1,5 @@
 const express = require('express');
-const { getTopics, getUsers, } = require('./controllers/controllers');
+const { getApi, getTopics, getUsers, postComment } = require('./controllers/controllers');
 const { getArticleById, getArticleCommentsById, getArticles, patchArticleById } = require('./controllers/articles-controller');
 
 
@@ -9,6 +9,7 @@ const app = express();
 app.use(express.json());
 
 // GET requests
+// app.get('/api', getApi);
 app.get('/api/topics', getTopics);
 app.get('/api/articles/:article_id', getArticleById);
 app.get('/api/articles/:article_id/comments', getArticleCommentsById);
@@ -18,14 +19,19 @@ app.get('/api/articles', getArticles)
 // PATCH requests
 app.patch('/api/articles/:article_id', patchArticleById);
 
+// POST requests
+app.post('/api/articles/:article_id/comments', postComment)
+
+
 app.use((err, req, res, next) => {
-  const badRequestCodes = ['22P02'];
+  const badRequestCodes = ['22P02', '23503'];
   if (badRequestCodes.includes(err.code)) {
-    res.status(400).send({ msg: 'Bad request.'})
+    res.status(400).send({ msg: 'Bad Request'})
   } else {
     next(err);
   };
 });
+
 
 // handles custom errors
 app.use((err, req, res, next) => {
