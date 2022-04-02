@@ -25,7 +25,6 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.postComment = (req, res, next) => {
-  console.log(req.params);
   addComment(req.body, req.params).then((comment) => {
     const { author: username , body } = comment
     res.status(201).send(body)
