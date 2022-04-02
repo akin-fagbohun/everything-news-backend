@@ -45,4 +45,11 @@ return db.query(`
   .then((result) => {
     return result.rows[0];
   });
-}
+};
+
+exports.removeComment = (id) => {
+  return db.query('DELETE FROM comments WHERE comment_id = $1;', [id])
+  .then((result) => {
+    return result.rows;
+  });
+};

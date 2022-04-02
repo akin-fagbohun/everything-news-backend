@@ -1,5 +1,5 @@
 const express = require('express');
-const { getApi, getTopics, getUsers, postComment } = require('./controllers/controllers');
+const { getApi, getTopics, getUsers, postComment, deleteComment } = require('./controllers/controllers');
 const { getArticleById, getArticleCommentsById, getArticles, patchArticleById } = require('./controllers/articles-controller');
 
 
@@ -21,6 +21,9 @@ app.patch('/api/articles/:article_id', patchArticleById);
 
 // POST requests
 app.post('/api/articles/:article_id/comments', postComment)
+
+// DELETE requests
+app.delete('/api/comments/:comment_id', deleteComment)
 
 
 app.use((err, req, res, next) => {

@@ -1,7 +1,7 @@
 const { articleData, commentData } = require('../db/data/test-data');
 const articles = require('../db/data/test-data/articles');
 const topics = require('../db/data/test-data/topics');
-const { selectApi, selectTopics, selectUsers, addComment } = require('../models/models');
+const { selectApi, selectTopics, selectUsers, addComment, removeComment } = require('../models/models');
 
 // exports.getApi = (req, res, next) => {
 //   selectApi().then((api) => {
@@ -30,6 +30,13 @@ exports.postComment = (req, res, next) => {
     res.status(201).send(body)
   })
   .catch(next)
+}
+
+exports.deleteComment = (req, res, next) => {
+  const { comment_id } = req.params
+  removeComment(comment_id).then(() => {
+    res.status(204).send()
+  })
 }
 
 

@@ -258,7 +258,6 @@ describe('GET /api/articles', () => {
       .expect(200)
       .then((res) => {
         const { body } = res;
-        console.log(body);
         expect(body).toBeInstanceOf(Array);
         body.forEach(article => {
           expect(article).toBeInstanceOf(Object);
@@ -347,7 +346,16 @@ describe('POST /api/articles/:article_id/comments', () => {
       expect(res.body).toEqual({ msg: 'Bad Request'});
     });  
   });
-  
+});
+
+describe('DELETE /api/comments/:comment_id', () => {
+  test('should remove comment from database by ID -> respond with 204', () => {
+    return request(app)
+      .delete('/api/comments/1')
+      .then((res) => {
+        expect(204)
+      });
+  });
 });
 
 // describe('GET /api', () => {
