@@ -96,7 +96,7 @@ describe('GET /api/articles/:article_id', () => {
       .get('/api/articles/notValidID')
       .expect(400)
       .then((res) => {
-        expect(res.body).toEqual({ msg: 'Bad request.' });
+        expect(res.body).toEqual({ msg: 'Bad Request' });
       });   
   });
 });
@@ -238,6 +238,36 @@ describe('GET /api/articles/:article_id/comments', () => {
         expect(res.body).toEqual({ msg: 'Not Found' });
       });   
   });
-
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+  test('sends POST to articleID/comments endpoint -> responds with comment body', () => {
+    return request(app)
+    .post('/api/articles/1/comments')
+    .send({ username :'icellusedkars', body: 'Thinking of a master plan' })
+    .expect(201)
+    .then((res) => {  
+      expect(res.text).toBe('Thinking of a master plan');
+    });  
+  });
+  
+  test('ERR sends POST to articleID/comments endpoint -> requests account', () => {
+    return request(app)
+    .post('/api/articles/1/comments')
+    .send({ username :'notRealUser', body: 'Thinking of a master plan' })
+    .expect(400)
+    .then((res) => {  
+      expect(res.body).toEqual({ msg: 'Bad Request'});
+    });  
+  });
+  
+});
+
+// describe('GET /api', () => {
+//   test('sends GET to API endpoint -> responds with JSON object', () => {
+//     return request(app)
+//       .get('/api')
+//       .expect(200)
+//   });
+// });
 
