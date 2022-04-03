@@ -358,11 +358,11 @@ describe('DELETE /api/comments/:comment_id', () => {
   });
 });
 
-// describe('GET /api', () => {
-//   test('sends GET to API endpoint -> responds with JSON object', () => {
-//     return request(app)
-//       .get('/api')
-//       .expect(200)
-//   });
-// });
+describe('GET /api', () => {
+  test('sends GET to API endpoint -> responds with JSON object', () => {
+    return request(app)
+      .get('/api')
+      .expect(200)
+  });
+});
 

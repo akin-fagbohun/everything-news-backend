@@ -3,12 +3,13 @@ const articles = require('../db/data/test-data/articles');
 const topics = require('../db/data/test-data/topics');
 const { selectApi, selectTopics, selectUsers, addComment, removeComment } = require('../models/models');
 
-// exports.getApi = (req, res, next) => {
-//   selectApi().then((api) => {
-//     res.status(200).send(api)
-//   })
-//   .catch(next)
-// };
+
+exports.getApi = (req, res, next) => {
+  selectApi().then((api) => {
+    res.status(200).send(api)
+  })
+  .catch(next)
+};
 
 exports.getTopics = (req, res, next) => {
   selectTopics().then((topics) => {

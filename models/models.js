@@ -1,19 +1,16 @@
 const db = require('../db/connection');
 const format = require('pg-format');
 const articles = require('../db/data/test-data/articles');
+const fs = require("fs/promises");
 
 // MISC models that are too few for seperate.
   // break out into separate model when necessary.
 
-// exports.selectApi = () => {
-//   return db.query('SELECT *')
-//   .then((topics) => {
-//     if (topics.rows.length === 0) {
-//       return Promise.reject({ status: 404, msg: 'URL not found.' })
-//     }
-//     return topics.rows;
-//   });
-// };
+exports.selectApi = async () => {
+  const endpoints = await fs.readFile(`db/endpoints.json`, "utf8");
+  console.log("🚀 ~ file: models.js ~ line 11 ~ endpoints", endpoints)
+  return endpoints;
+};
 
 exports.selectTopics = () => {
   return db.query('SELECT * FROM topics')
