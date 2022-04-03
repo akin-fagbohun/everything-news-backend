@@ -11,10 +11,10 @@ app.use(express.json());
 // GET requests
 // app.get('/api', getApi);
 app.get('/api/topics', getTopics);
+app.get('/api/articles', getArticles)
 app.get('/api/articles/:article_id', getArticleById);
 app.get('/api/articles/:article_id/comments', getArticleCommentsById);
 app.get('/api/users', getUsers);
-app.get('/api/articles', getArticles)
 
 // PATCH requests
 app.patch('/api/articles/:article_id', patchArticleById);
