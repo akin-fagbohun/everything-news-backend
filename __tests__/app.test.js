@@ -9,7 +9,7 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe('GET /api/topics', () => {
-  test.only('sends GET to topics endpoint -> checks for Array and elements', () => {
+  test('sends GET to topics endpoint -> checks for Array and elements', () => {
     return request(app)
       .get('/api/topics')
       .expect(200)
@@ -100,7 +100,7 @@ describe('GET /api/articles/:article_id', () => {
 });
 
 describe('PATCH /api/articles/:article_id', () => {
-  test('sends PATCH to ID endpoint -> checks each object key', () => {
+  test.only('sends PATCH to ID endpoint -> checks each object key', () => {
     return request(app)
       .patch('/api/articles/1')
       .send({ inc_votes: 1 })

@@ -1,11 +1,6 @@
-const {
-  selectApi,
-  selectUsers,
-  addComment,
-  removeComment,
-} = require('../models/models');
-
+const { selectApi, addComment, removeComment } = require('../models/models');
 const { selectTopics } = require('../models/topics-model');
+const { selectUsers } = require('../models/users-model');
 
 exports.getApi = (req, res, next) => {
   selectApi()
