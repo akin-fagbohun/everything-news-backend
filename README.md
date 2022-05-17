@@ -64,5 +64,6 @@ The minimum recommended version of PostgreSQL is v14
 ## Contact
 
 Project Link: [https://github.com/akin-fagbohun/everything-news-backend](https://github.com/akin-fagbohun/everything-news-backend)
+LinkedIn Profile: [https://www.linkedin.com/in/akinfagbohun/](https://www.linkedin.com/in/akinfagbohun/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
