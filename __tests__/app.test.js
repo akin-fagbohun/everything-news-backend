@@ -85,7 +85,7 @@ describe('GET /api/articles/:article_id', () => {
       .get('/api/articles/997')
       .expect(404)
       .then((res) => {
-        expect(res.body).toEqual({ msg: 'Not Found' });
+        expect(res.body).toEqual({ msg: 'Article Not Found' });
       });
   });
 
@@ -296,7 +296,7 @@ describe('GET /api/articles', () => {
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
-  test.only('sends GET to articleID/comments endpoint -> checks response', () => {
+  test('sends GET to articleID/comments endpoint -> checks response', () => {
     return request(app)
       .get('/api/articles/1/comments')
       .expect(200)
@@ -320,7 +320,7 @@ describe('GET /api/articles/:article_id/comments', () => {
       .get('/api/articles/997/comments')
       .expect(404)
       .then((res) => {
-        expect(res.body).toEqual({ msg: 'Not Found' });
+        expect(res.body).toEqual({ msg: 'User Not Found' });
       });
   });
 });

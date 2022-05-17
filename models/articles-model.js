@@ -1,43 +1,52 @@
 const db = require('../db/connection');
 const format = require('pg-format');
-const articles = require('../db/data/test-data/articles');
-
-// GET request models
-
-// exports.selectArticles = () => {
-//   return db.query('SELECT * FROM articles')
-//   .then((articles) => {
-//     return articles.rows;
-//   });
-// };
 
 exports.selectArticles = (req) => {
-  const sortableColumns = [
-    'author',
+  const { sort_by, order, topic } = req.query;
+
+  sortableColumns = [
+    'username',
     'created_at',
     'title',
     'topic',
     'votes',
     'comment_count',
   ];
-  const { query: urlQuery } = req;
+
+  sortableOrder = ['asc', 'desc'];
+
   let sqlQuery = `SELECT * FROM articles`;
 
-  if (Object.keys(urlQuery).length !== 0) {
+  // runs of request has a query.
+  if (Object.keys(req.query).length) {
+    // rejects invalid queries
+    if (!sort_by && !order) {
+      return Promise.reject({ status: 400, msg: 'Invalid query' });
+    }
+
     // rejects invalid sort queries
-    if (!sortableColumns.includes(urlQuery.sort_by)) {
+    if (sort_by && !sortableColumns.includes(sort_by)) {
       return Promise.reject({ status: 400, msg: 'Invalid sort query' });
     }
+
     // rejects invalid order queries
-    if (!['asc', 'desc'].includes(urlQuery.order)) {
+    if (order && !sortableOrder.includes(order)) {
       return Promise.reject({ status: 400, msg: 'Invalid order query' });
     }
-    // allows sorting by topic
-    if (urlQuery.hasOwnProperty('topic')) {
-      sqlQuery = `SELECT * FROM articles WHERE topic LIKE '${urlQuery.topic}'`;
+
+    // adds SQL topic sort parameters
+    if (topic) {
+      sqlQuery = `
+      SELECT * FROM articles 
+      WHERE topic LIKE '${topic}'`;
     }
-    // adds SQL sorting parameters
-    sqlQuery += ` ORDER BY ${urlQuery.sort_by} ${urlQuery.order};`;
+
+    // adds SQL order parameters
+    if (!order) {
+      sqlQuery += ` ORDER BY ${sort_by} DESC;`;
+    } else if (order) {
+      sqlQuery += ` ORDER BY ${sort_by} ${order};`;
+    }
   }
 
   return db.query(sqlQuery).then((articles) => {

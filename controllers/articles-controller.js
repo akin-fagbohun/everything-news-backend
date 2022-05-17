@@ -1,14 +1,9 @@
-const { articleData } = require('../db/data/test-data');
-const articles = require('../db/data/test-data/articles');
-const topics = require('../db/data/test-data/topics');
 const {
   selectArticles,
   selectArticleById,
   selectArticleCommentsById,
   updateArticleById,
 } = require('../models/articles-model');
-
-// GET request controllers
 
 exports.getArticles = (req, res, next) => {
   selectArticles(req)
@@ -35,8 +30,6 @@ exports.getArticleCommentsById = (req, res, next) => {
     })
     .catch(next);
 };
-
-// PATCH request controllers
 
 exports.patchArticleById = (req, res, next) => {
   const { inc_votes: votes } = req.body;

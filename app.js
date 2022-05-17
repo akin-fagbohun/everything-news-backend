@@ -1,11 +1,11 @@
 const express = require('express');
+const { getBase, getApi } = require('./controllers/controllers');
+const { getTopics } = require('./controllers/topics-controller');
+const { getUsers } = require('./controllers/users-controller');
 const {
-  getApi,
   postComment,
   deleteComment,
-} = require('./controllers/controllers');
-const { getTopics } = require('./controllers/topics-controller');
-
+} = require('./controllers/comments-controller');
 const {
   getArticleById,
   getArticleCommentsById,
@@ -13,14 +13,13 @@ const {
   patchArticleById,
 } = require('./controllers/articles-controller');
 
-const { getUsers } = require('./controllers/users-controller');
-
 const app = express();
 
 // middleware
 app.use(express.json());
 
 // GET requests
+app.get('/', getBase);
 app.get('/api', getApi);
 app.get('/api/topics', getTopics);
 app.get('/api/articles', getArticles);
