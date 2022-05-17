@@ -8,5 +8,3 @@ exports.selectUsers = () => {
     return users.rows;
   });
 };
-
-const name = 'akin';
