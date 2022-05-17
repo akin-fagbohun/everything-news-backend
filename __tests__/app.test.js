@@ -9,7 +9,7 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe('GET /api/topics', () => {
-  test('sends GET to topics endpoint -> checks for Array and elements', () => {
+  test.only('sends GET to topics endpoint -> checks for Array and elements', () => {
     return request(app)
       .get('/api/topics')
       .expect(200)
@@ -17,8 +17,8 @@ describe('GET /api/topics', () => {
         const { body } = res;
         // checks object type
         expect(body).toBeInstanceOf(Array);
-        // checks each element on array 
-        body.forEach(topic => {
+        // checks each element on array
+        body.forEach((topic) => {
           // checks element type and confirms keys and value types
           expect(topic).toBeInstanceOf(Object);
           expect(Object.keys(topic).length).toBe(2);
@@ -31,11 +31,9 @@ describe('GET /api/topics', () => {
   });
 });
 
-describe('ERROR GET /api/topicd', () => {
+describe('ERROR GET /api/topics', () => {
   test('sends GET to incorrect endpoint -> returns 404', () => {
-    return request(app)
-      .get('/api/topicd')
-      .expect(404)
+    return request(app).get('/api/topicd').expect(404);
   });
 });
 
@@ -59,7 +57,7 @@ describe('GET /api/articles/:article_id', () => {
         expect(body.article).toHaveProperty('created_at');
         expect(body.article).toHaveProperty('votes');
         expect(body.article).toHaveProperty('comment_count');
-      });   
+      });
   });
 
   test('sends GET to article ID endpoint -> checks object response at ID', () => {
@@ -67,8 +65,8 @@ describe('GET /api/articles/:article_id', () => {
       .get('/api/articles/1')
       .expect(200)
       .then((res) => {
-        // checks article ID object. 
-          // Note .toMatchObject allows for omission of 'created_at' key
+        // checks article ID object.
+        // Note .toMatchObject allows for omission of 'created_at' key
         const output = {
           comment_count: '11',
           article_id: 1,
@@ -76,10 +74,10 @@ describe('GET /api/articles/:article_id', () => {
           topic: 'mitch',
           author: 'butter_bridge',
           body: 'I find this existence challenging',
-          votes: 100
+          votes: 100,
         };
         expect(res.body.article).toMatchObject(output);
-      });   
+      });
   });
 
   test('GET ERR -> sends request to non-existent article ID', () => {
@@ -88,7 +86,7 @@ describe('GET /api/articles/:article_id', () => {
       .expect(404)
       .then((res) => {
         expect(res.body).toEqual({ msg: 'Not Found' });
-      });   
+      });
   });
 
   test('GET ERR -> sends request with invalid article ID', () => {
@@ -97,7 +95,7 @@ describe('GET /api/articles/:article_id', () => {
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({ msg: 'Bad Request' });
-      });   
+      });
   });
 });
 
@@ -105,7 +103,7 @@ describe('PATCH /api/articles/:article_id', () => {
   test('sends PATCH to ID endpoint -> checks each object key', () => {
     return request(app)
       .patch('/api/articles/1')
-      .send({ inc_votes : 1 })
+      .send({ inc_votes: 1 })
       .expect(201)
       .then((res) => {
         const { body } = res;
@@ -130,13 +128,13 @@ describe('PATCH /api/articles/:article_id', () => {
   test('sends PATCH to ID endpoint -> tests negative downvote', () => {
     return request(app)
       .patch('/api/articles/1')
-      .send({ inc_votes : -99 })
+      .send({ inc_votes: -99 })
       .expect(201)
       .then((res) => {
         const { body } = res;
         // checks downvote by -99 applies
         expect(body.votes).toBe(1);
-      });   
+      });
   });
 
   test('GET ERR -> sends PATCH to ID endpoint -> tests missing body', () => {
@@ -146,17 +144,17 @@ describe('PATCH /api/articles/:article_id', () => {
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({ msg: 'Bad Request' });
-      });   
+      });
   });
 
   test('GET ERR -> sends PATCH to ID endpoint -> tests incorrect value type.', () => {
     return request(app)
       .patch('/api/articles/1')
-      .send({ inc_votes : '-99' })
+      .send({ inc_votes: '-99' })
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({ msg: 'Bad Request' });
-      });   
+      });
   });
 });
 
@@ -169,10 +167,11 @@ describe('GET /api/users', () => {
         const { body } = res;
         // checks response value type
         expect(body).toBeInstanceOf(Array);
-        // checks each element of array response    
-        body.forEach(user => {
+        // checks each element of array response
+        body.forEach((user) => {
           // checks each element's objects and keys
-          expect(user).toBeInstanceOf(Object);user
+          expect(user).toBeInstanceOf(Object);
+          user;
           expect(Object.keys(user).length).toBe(3);
           expect(user).toHaveProperty('username');
           expect(user).toHaveProperty('name');
@@ -183,7 +182,7 @@ describe('GET /api/users', () => {
         });
       });
   });
-})
+});
 
 describe('GET /api/articles', () => {
   test('sends GET to articles endpoint -> responds with array -> checks elements', () => {
@@ -193,7 +192,7 @@ describe('GET /api/articles', () => {
       .then((res) => {
         const { body } = res;
         expect(body).toBeInstanceOf(Array);
-        body.forEach(article => {
+        body.forEach((article) => {
           expect(article).toBeInstanceOf(Object);
           expect(Object.keys(article).length).toBe(7);
           expect(article).toHaveProperty('article_id');
@@ -213,7 +212,7 @@ describe('GET /api/articles', () => {
       .then((res) => {
         const { body } = res;
         expect(body).toBeInstanceOf(Array);
-        body.forEach(article => {
+        body.forEach((article) => {
           expect(article).toBeInstanceOf(Object);
           expect(Object.keys(article).length).toBe(7);
           expect(article).toHaveProperty('article_id');
@@ -224,8 +223,8 @@ describe('GET /api/articles', () => {
           expect(article).toHaveProperty('topic');
           expect(article).toHaveProperty('votes');
         });
-      // checks sorting by article age (article_id)
-      expect(body).toBeSortedBy('created_at', { ascending: true });
+        // checks sorting by article age (article_id)
+        expect(body).toBeSortedBy('created_at', { ascending: true });
       });
   });
 
@@ -236,7 +235,7 @@ describe('GET /api/articles', () => {
       .then((res) => {
         const { body } = res;
         expect(body).toBeInstanceOf(Array);
-        body.forEach(article => {
+        body.forEach((article) => {
           expect(article).toBeInstanceOf(Object);
           expect(Object.keys(article).length).toBe(7);
           expect(article).toHaveProperty('article_id');
@@ -247,8 +246,8 @@ describe('GET /api/articles', () => {
           expect(article).toHaveProperty('topic');
           expect(article).toHaveProperty('votes');
         });
-      // checks sorting by article age (article_id)
-      expect(body).toBeSortedBy('created_at', { descending: true });
+        // checks sorting by article age (article_id)
+        expect(body).toBeSortedBy('created_at', { descending: true });
       });
   });
 
@@ -259,7 +258,7 @@ describe('GET /api/articles', () => {
       .then((res) => {
         const { body } = res;
         expect(body).toBeInstanceOf(Array);
-        body.forEach(article => {
+        body.forEach((article) => {
           expect(article).toBeInstanceOf(Object);
           expect(Object.keys(article).length).toBe(7);
           expect(article).toHaveProperty('article_id');
@@ -270,8 +269,8 @@ describe('GET /api/articles', () => {
           expect(article).toHaveProperty('topic');
           expect(article).toHaveProperty('votes');
         });
-      // checks sorting by article age (article_id)
-      expect(body).toBeSortedBy('created_at', { descending: true });
+        // checks sorting by article age (article_id)
+        expect(body).toBeSortedBy('created_at', { descending: true });
       });
   });
 
@@ -299,52 +298,52 @@ describe('GET /api/articles', () => {
 describe('GET /api/articles/:article_id/comments', () => {
   test('sends GET to articleID/comments endpoint -> checks response', () => {
     return request(app)
-    .get('/api/articles/1/comments')
-    .expect(200)
-    .then((res) => {
-      const { body } = res;
-      expect(body).toBeInstanceOf(Object);
-      expect(body.comments).toBeInstanceOf(Array);
-      expect(Object.keys(body.comments).length).toBe(11);
-      body.comments.forEach(comment => {
-        expect(comment).toHaveProperty('comment_id');
-        expect(comment).toHaveProperty('votes');
-        expect(comment).toHaveProperty('created_at');
-        expect(comment).toHaveProperty('body');
-        expect(comment).toHaveProperty('author');
+      .get('/api/articles/1/comments')
+      .expect(200)
+      .then((res) => {
+        const { body } = res;
+        expect(body).toBeInstanceOf(Object);
+        expect(body.comments).toBeInstanceOf(Array);
+        expect(Object.keys(body.comments).length).toBe(11);
+        body.comments.forEach((comment) => {
+          expect(comment).toHaveProperty('comment_id');
+          expect(comment).toHaveProperty('votes');
+          expect(comment).toHaveProperty('created_at');
+          expect(comment).toHaveProperty('body');
+          expect(comment).toHaveProperty('author');
+        });
       });
-    });  
-  });   
-  
+  });
+
   test('GET ERR -> sends request to non-existent articleID/comments endpoint -> checks response', () => {
     return request(app)
       .get('/api/articles/997/comments')
       .expect(404)
       .then((res) => {
         expect(res.body).toEqual({ msg: 'Not Found' });
-      });   
+      });
   });
 });
 
 describe('POST /api/articles/:article_id/comments', () => {
   test('sends POST to articleID/comments endpoint -> responds with comment body', () => {
     return request(app)
-    .post('/api/articles/1/comments')
-    .send({ username :'icellusedkars', body: 'Thinking of a master plan' })
-    .expect(201)
-    .then((res) => {  
-      expect(res.text).toBe('Thinking of a master plan');
-    });  
+      .post('/api/articles/1/comments')
+      .send({ username: 'icellusedkars', body: 'Thinking of a master plan' })
+      .expect(201)
+      .then((res) => {
+        expect(res.text).toBe('Thinking of a master plan');
+      });
   });
-  
+
   test('ERR sends POST to articleID/comments endpoint -> requests account', () => {
     return request(app)
-    .post('/api/articles/1/comments')
-    .send({ username :'notRealUser', body: 'Thinking of a master plan' })
-    .expect(400)
-    .then((res) => {  
-      expect(res.body).toEqual({ msg: 'Bad Request'});
-    });  
+      .post('/api/articles/1/comments')
+      .send({ username: 'notRealUser', body: 'Thinking of a master plan' })
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({ msg: 'Bad Request' });
+      });
   });
 });
 
@@ -353,16 +352,13 @@ describe('DELETE /api/comments/:comment_id', () => {
     return request(app)
       .delete('/api/comments/1')
       .then((res) => {
-        expect(204)
+        expect(204);
       });
   });
 });
 
 describe('GET /api', () => {
   test('sends GET to API endpoint -> responds with JSON object', () => {
-    return request(app)
-      .get('/api')
-      .expect(200)
+    return request(app).get('/api').expect(200);
   });
 });
-
