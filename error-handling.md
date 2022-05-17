@@ -1,15 +1,13 @@
 # Possible Errors
 
-This is an _**incomplete**_ guide to the possible errors that may happen in your app. We have left some of them blank to prompt you to think about the errors that could occur as a client uses each endpoint that you have created.
+This is an _**relatively complete**_ guide to the possible errors that may happen in this app.
 
-Think about what could go wrong for each route, and the HTTP status code should be sent to the client in each case.
-For each thing that could go wrong, make a test with your expected status code and then make sure that possibility is handled.
-
-Bear in mind, handling bad inputs from clients doesn't necessarily have to lead to a 4\*\* status code. Handling can include using default behaviours or even ignoring parts of the request.
+I've tried to think about what could go wrong for each route, and the HTTP status code should be sent to the client in each case.
+For each thing that could go wrong, a response has been created within the app, with tests in the testing suite.
 
 ---
 
-## Relevant HTTP Status Codes
+## HTTP Status Codes
 
 - 200 OK
 - 201 Created
@@ -29,17 +27,21 @@ Bear in mind, handling bad inputs from clients doesn't necessarily have to lead 
 
 ## Unavailable Routes
 
+- Status: - 404 Not Found
+
 ### GET `/not-a-route`
 
-- Status: ???
+- Status: - 404 Not Found
 
 ---
 
 ## Available Routes
 
+- Status: - 200 OK
+
 ### GET `/api/topics`
 
--
+- Status: - 200 OK
 
 ### GET `/api/users/:username`
 
@@ -47,8 +49,8 @@ Bear in mind, handling bad inputs from clients doesn't necessarily have to lead 
 
 ### GET `/api/articles/:article_id`
 
-- Bad `article_id` (e.g. `/dog`)
-- Well formed `article_id` that doesn't exist in the database (e.g. `/999999`)
+- Bad `article_id` (e.g. `/dog`) - Status: - 400 Bad request
+- Well formed `article_id` that doesn't exist in the database (e.g. `/999999`) - Status: - 404 Not found
 
 ### PATCH `/api/articles/:article_id`
 

@@ -12,7 +12,14 @@ const articles = require('../db/data/test-data/articles');
 // };
 
 exports.selectArticles = (req) => {
-  const sortableColumns = ['author', 'created_at', 'title', 'topic', 'votes'];
+  const sortableColumns = [
+    'author',
+    'created_at',
+    'title',
+    'topic',
+    'votes',
+    'comment_count',
+  ];
   const { query: urlQuery } = req;
   let sqlQuery = `SELECT * FROM articles`;
 
@@ -62,14 +69,14 @@ exports.selectArticleCommentsById = (id) => {
   return db
     .query(
       `
-    SELECT comment_id, author, body, created_at, votes
+    SELECT comment_id, author AS username, body, created_at, votes
     FROM comments
     WHERE article_id = $1;`,
       [id]
     )
     .then((comment) => {
       if (comment.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: 'Not Found' });
+        return Promise.reject({ status: 404, msg: 'User Not Found' });
       }
       return comment.rows;
     });
