@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const { getBase, getApi } = require('./controllers/controllers');
 const { getTopics } = require('./controllers/topics-controller');
 const { getUsers } = require('./controllers/users-controller');
@@ -17,6 +18,7 @@ const app = express();
 
 // middleware
 app.use(express.json());
+app.use(cors());
 
 // GET requests
 app.get('/', getBase);
