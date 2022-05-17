@@ -13,7 +13,7 @@ exports.getApi = (req, res, next) => {
     .then((api) => {
       res.header('Content-Type', 'application/json');
       res.status(200);
-      res.send(JSON.stringify(api, null, 2));
+      res.send(JSON.stringify(api, null, 4));
     })
     .catch(next);
 };
