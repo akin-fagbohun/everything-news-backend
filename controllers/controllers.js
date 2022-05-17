@@ -11,7 +11,9 @@ exports.getBase = (_, res, next) => {
 exports.getApi = (req, res, next) => {
   selectApi()
     .then((api) => {
-      res.status(200).send(api);
+      res.header('Content-Type', 'application/json');
+      res.status(200);
+      res.send(JSON.stringify(api, null, 2));
     })
     .catch(next);
 };
