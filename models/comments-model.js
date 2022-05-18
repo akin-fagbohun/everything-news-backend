@@ -16,6 +16,17 @@ exports.addComment = (comment, article_id) => {
     });
 };
 
+exports.updateCommentById = (id, value) => {
+  if (!value || typeof value !== 'number') {
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
+  }
+  const query = format(
+    'UPDATE %I SET votes = votes + $2 WHERE comment_id = $1 RETURNING *;',
+    'comments'
+  );
+  return db.query(query, [id, value]);
+};
+
 exports.removeComment = (id) => {
   return db
     .query('DELETE FROM comments WHERE comment_id = $1;', [id])
