@@ -3,7 +3,8 @@ const { selectTopics } = require('../models/topics-model');
 exports.getTopics = (req, res, next) => {
   selectTopics()
     .then((topics) => {
-      res.status(200).send(topics);
+      console.log(topics, '<<<topics');
+      res.status(200).send({ topics: topics });
     })
     .catch(next);
 };
