@@ -20,7 +20,7 @@ exports.selectArticles = (req) => {
   // runs of request has a query.
   if (Object.keys(req.query).length) {
     // rejects invalid queries
-    if (!sort_by && !order) {
+    if (!sort_by && !order && !topic) {
       return Promise.reject({ status: 400, msg: 'Invalid query' });
     }
 

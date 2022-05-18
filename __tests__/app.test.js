@@ -211,8 +211,8 @@ describe('GET /api/articles', () => {
       .expect(200)
       .then((res) => {
         const { body } = res;
-        expect(body).toBeInstanceOf(Array);
-        body.forEach((article) => {
+        expect(body).toBeInstanceOf(Object);
+        body.articles.forEach((article) => {
           expect(article).toBeInstanceOf(Object);
           expect(Object.keys(article).length).toBe(7);
           expect(article).toHaveProperty('article_id');
@@ -224,7 +224,7 @@ describe('GET /api/articles', () => {
           expect(article).toHaveProperty('votes');
         });
         // checks sorting by article age (article_id)
-        expect(body).toBeSortedBy('created_at', { ascending: true });
+        expect(body.articles).toBeSortedBy('created_at', { ascending: true });
       });
   });
 
@@ -234,8 +234,8 @@ describe('GET /api/articles', () => {
       .expect(200)
       .then((res) => {
         const { body } = res;
-        expect(body).toBeInstanceOf(Array);
-        body.forEach((article) => {
+        expect(body).toBeInstanceOf(Object);
+        body.articles.forEach((article) => {
           expect(article).toBeInstanceOf(Object);
           expect(Object.keys(article).length).toBe(7);
           expect(article).toHaveProperty('article_id');
@@ -247,7 +247,7 @@ describe('GET /api/articles', () => {
           expect(article).toHaveProperty('votes');
         });
         // checks sorting by article age (article_id)
-        expect(body).toBeSortedBy('created_at', { descending: true });
+        expect(body.articles).toBeSortedBy('created_at', { descending: true });
       });
   });
 
@@ -257,8 +257,8 @@ describe('GET /api/articles', () => {
       .expect(200)
       .then((res) => {
         const { body } = res;
-        expect(body).toBeInstanceOf(Array);
-        body.forEach((article) => {
+        expect(body).toBeInstanceOf(Object);
+        body.articles.forEach((article) => {
           expect(article).toBeInstanceOf(Object);
           expect(Object.keys(article).length).toBe(7);
           expect(article).toHaveProperty('article_id');
@@ -270,7 +270,7 @@ describe('GET /api/articles', () => {
           expect(article).toHaveProperty('votes');
         });
         // checks sorting by article age (article_id)
-        expect(body).toBeSortedBy('created_at', { descending: true });
+        expect(body.articles).toBeSortedBy('created_at', { descending: true });
       });
   });
 
