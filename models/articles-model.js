@@ -4,14 +4,7 @@ const format = require('pg-format');
 exports.selectArticles = (req) => {
   const { sort_by, order, topic } = req.query;
 
-  sortableColumns = [
-    'username',
-    'created_at',
-    'title',
-    'topic',
-    'votes',
-    'comment_count',
-  ];
+  sortableColumns = ['username', 'created_at', 'title', 'topic', 'votes'];
 
   sortableOrder = ['asc', 'desc'];
 
