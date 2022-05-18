@@ -16,9 +16,9 @@ describe('GET /api/topics', () => {
       .then((res) => {
         const { body } = res;
         // checks object type
-        expect(body).toBeInstanceOf(Array);
+        expect(body).toBeInstanceOf(Object);
         // checks each element on array
-        body.forEach((topic) => {
+        body.topics.forEach((topic) => {
           // checks element type and confirms keys and value types
           expect(topic).toBeInstanceOf(Object);
           expect(Object.keys(topic).length).toBe(2);
@@ -191,8 +191,8 @@ describe('GET /api/articles', () => {
       .expect(200)
       .then((res) => {
         const { body } = res;
-        expect(body).toBeInstanceOf(Array);
-        body.forEach((article) => {
+        expect(body).toBeInstanceOf(Object);
+        body.articles.forEach((article) => {
           expect(article).toBeInstanceOf(Object);
           expect(Object.keys(article).length).toBe(7);
           expect(article).toHaveProperty('article_id');

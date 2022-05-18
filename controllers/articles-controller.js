@@ -8,7 +8,7 @@ const {
 exports.getArticles = (req, res, next) => {
   selectArticles(req)
     .then((articles) => {
-      res.status(200).send(articles);
+      res.status(200).send({ articles: articles });
     })
     .catch(next);
 };
