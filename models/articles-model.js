@@ -42,12 +42,15 @@ exports.selectArticles = (req) => {
     }
 
     // adds SQL order parameters
-    if (!order) {
+    if (!order && !sort_by) {
+      sqlQuery += ` ORDER BY topic desc;`;
+    } else if (!order) {
       sqlQuery += ` ORDER BY ${sort_by} desc;`;
     } else if (order) {
       sqlQuery += ` ORDER BY ${sort_by} ${order};`;
     }
   }
+  console.log(sqlQuery, '<<< SUCCESS >>>');
 
   return db.query(sqlQuery).then((articles) => {
     return articles.rows;

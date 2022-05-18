@@ -8,6 +8,7 @@ const {
 exports.getArticles = (req, res, next) => {
   selectArticles(req)
     .then((articles) => {
+      console.log(articles, '<<< article response in controller');
       res.status(200).send({ articles: articles });
     })
     .catch(next);
