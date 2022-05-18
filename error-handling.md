@@ -1,6 +1,6 @@
 # Possible Errors
 
-This is an _**relatively complete**_ guide to the possible errors that may happen in this app.
+This is a _**relatively complete**_ guide to the possible errors that may happen in this app.
 
 I've tried to think about what could go wrong for each route, and the HTTP status code should be sent to the client in each case.
 For each thing that could go wrong, a response has been created within the app, with tests in the testing suite.
