@@ -43,7 +43,7 @@ exports.selectArticles = (req) => {
 
     // adds SQL order parameters
     if (!order) {
-      sqlQuery += ` ORDER BY ${sort_by} DESC;`;
+      sqlQuery += ` ORDER BY ${sort_by} desc;`;
     } else if (order) {
       sqlQuery += ` ORDER BY ${sort_by} ${order};`;
     }
