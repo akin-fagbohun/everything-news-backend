@@ -34,13 +34,30 @@ exports.selectArticles = (req) => {
       WHERE topic LIKE '${topic}'`;
     }
 
-    // adds SQL order parameters
-    if (!order && !sort_by) {
-      sqlQuery += ` ORDER BY topic desc;`;
-    } else if (sort_by && !order) {
+    // filter scenarios to amend SQL query.
+    if (topic && !sort_by && order === 'desc') {
+      sqlQuery += ` ORDER BY created_at desc;`;
+    }
+    if (topic && !sort_by && order === 'asc') {
+      sqlQuery += ` ORDER BY created_at asc;`;
+    }
+    if (topic && sort_by && order === 'desc') {
       sqlQuery += ` ORDER BY ${sort_by} desc;`;
-    } else if (order) {
-      sqlQuery += ` ORDER BY ${sort_by} ${order};`;
+    }
+    if (topic && sort_by && order === 'asc') {
+      sqlQuery += ` ORDER BY ${sort_by} asc;`;
+    }
+    if (!topic && !sort_by && order === 'desc') {
+      sqlQuery += ` ORDER BY created_at desc;`;
+    }
+    if (!topic && !sort_by && order === 'asc') {
+      sqlQuery += ` ORDER BY created_at asc;`;
+    }
+    if (!topic && sort_by && order === 'desc') {
+      sqlQuery += ` ORDER BY ${sort_by} desc;`;
+    }
+    if (!topic && sort_by && order === 'asc') {
+      sqlQuery += ` ORDER BY ${sort_by} asc;`;
     }
   }
   console.log(sqlQuery, '<<< SUCCESS >>>');
